@@ -1,4 +1,4 @@
-package com.example.nbcamblog.entity;
+package com.sparta.nbcamblog.entity;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;

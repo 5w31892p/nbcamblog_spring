@@ -1,10 +1,10 @@
-package com.example.nbcamblog.service;
+package com.sparta.nbcamblog.service;
 
-import com.example.nbcamblog.dto.BlogRequestDto;
-import com.example.nbcamblog.dto.BlogResponseDto;
-import com.example.nbcamblog.dto.DeletePostDto;
-import com.example.nbcamblog.entity.Blog;
-import com.example.nbcamblog.repository.BlogRepository;
+import com.sparta.nbcamblog.dto.BlogRequestDto;
+import com.sparta.nbcamblog.dto.BlogResponseDto;
+import com.sparta.nbcamblog.dto.DeletePostDto;
+import com.sparta.nbcamblog.entity.Blog;
+import com.sparta.nbcamblog.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

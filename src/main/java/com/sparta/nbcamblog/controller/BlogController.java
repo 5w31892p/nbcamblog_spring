@@ -1,10 +1,10 @@
-package com.example.nbcamblog.controller;
+package com.sparta.nbcamblog.controller;
 
 
-import com.example.nbcamblog.dto.BlogRequestDto;
-import com.example.nbcamblog.dto.BlogResponseDto;
-import com.example.nbcamblog.dto.DeletePostDto;
-import com.example.nbcamblog.service.BlogService;
+import com.sparta.nbcamblog.dto.BlogRequestDto;
+import com.sparta.nbcamblog.dto.BlogResponseDto;
+import com.sparta.nbcamblog.dto.DeletePostDto;
+import com.sparta.nbcamblog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,6 +1,6 @@
-package com.example.nbcamblog.repository;
+package com.sparta.nbcamblog.repository;
 
-import com.example.nbcamblog.entity.Blog;
+import com.sparta.nbcamblog.entity.Blog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

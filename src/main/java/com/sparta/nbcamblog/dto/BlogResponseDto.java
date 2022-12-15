@@ -1,6 +1,6 @@
-package com.example.nbcamblog.dto;
+package com.sparta.nbcamblog.dto;
 
-import com.example.nbcamblog.entity.Blog;
+import com.sparta.nbcamblog.entity.Blog;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

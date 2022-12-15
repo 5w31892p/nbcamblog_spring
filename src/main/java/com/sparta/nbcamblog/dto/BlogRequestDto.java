@@ -1,4 +1,4 @@
-package com.example.nbcamblog.dto;
+package com.sparta.nbcamblog.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
