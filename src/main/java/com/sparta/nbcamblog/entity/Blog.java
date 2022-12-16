@@ -16,10 +16,7 @@ public class Blog extends Timestamped {
     private Long id;
 
     @Column(nullable = false)
-    private String author;
-
-    @Column(nullable = false)
-    private String password;
+    private String username;
 
     @Column(nullable = false)
     private String title;
@@ -27,23 +24,20 @@ public class Blog extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    public Blog (String author, String password, String title, String content) {
-        this.author = author;
-        this.password = password;
+    public Blog (String username, String title, String content) {
+        this.username = username;
         this.title = title;
         this.content = content;
     }
 
     public Blog (BlogRequestDto blogRequestDto) {
-        this.author = blogRequestDto.getAuthor();
-        this.password = blogRequestDto.getPassword();
+        this.username = blogRequestDto.getUsername();
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();
     }
 
     public void update (BlogRequestDto blogRequestDto) {
-        this.author = blogRequestDto.getAuthor();
-        this.password = blogRequestDto.getPassword();
+        this.username = blogRequestDto.getUsername();
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();
     }

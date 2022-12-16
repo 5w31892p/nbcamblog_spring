@@ -3,11 +3,11 @@ package com.sparta.nbcamblog.controller;
 
 import com.sparta.nbcamblog.dto.BlogRequestDto;
 import com.sparta.nbcamblog.dto.BlogResponseDto;
-import com.sparta.nbcamblog.dto.DeletePostDto;
 import com.sparta.nbcamblog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -17,8 +17,8 @@ public class BlogController {
     private final BlogService blogService;
 
     @PostMapping("/post")
-    public BlogResponseDto createContent(@RequestBody BlogRequestDto blogRequestDto) {
-        return blogService.createContent(blogRequestDto);
+    public BlogResponseDto createContent(@RequestBody BlogRequestDto blogRequestDto, HttpServletRequest request) {
+        return blogService.createContent(blogRequestDto, request);
     }
 
     @GetMapping("/posts")
@@ -31,13 +31,18 @@ public class BlogController {
         return blogService.getContent(id);
     }
 
+    @GetMapping("/post/name")
+    public List<BlogResponseDto> getByUsername(@RequestParam String username) {
+        return blogService.getByUsername(username);
+    }
+
     @PutMapping("/post/{id}")
-    public BlogResponseDto updateContent (@PathVariable Long id, @RequestBody BlogRequestDto blogRequestDto) {
-        return blogService.updateContent(id, blogRequestDto);
+    public String updateContent (@PathVariable Long id, @RequestBody BlogRequestDto blogRequestDto, HttpServletRequest request) {
+        return blogService.updateContent(id, blogRequestDto, request);
     }
 
     @DeleteMapping("/post/{id}")
-    public DeletePostDto deletePost (@PathVariable Long id, @RequestBody BlogRequestDto blogRequestDto) {
-        return blogService.deletePost(id, blogRequestDto);
+    public String deletePost (@PathVariable Long id, @RequestBody HttpServletRequest request) {
+        return blogService.deletePost(id, request);
     }
 }
