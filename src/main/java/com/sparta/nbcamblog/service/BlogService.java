@@ -2,6 +2,7 @@ package com.sparta.nbcamblog.service;
 
 import com.sparta.nbcamblog.dto.BlogRequestDto;
 import com.sparta.nbcamblog.dto.BlogResponseDto;
+import com.sparta.nbcamblog.dto.DeleteResponseDto;
 import com.sparta.nbcamblog.entity.Blog;
 import com.sparta.nbcamblog.entity.User;
 import com.sparta.nbcamblog.jwt.JwtUtil;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class BlogService {
     @Transactional
     public BlogResponseDto createContent(BlogRequestDto blogRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
-        Claims claims;
+        Claims claims = null;
 
         if (token != null) {
             // Token 검증
@@ -38,21 +38,20 @@ public class BlogService {
             } else {
                 throw new IllegalArgumentException("Token Error");
             }
-
-            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-            );
-            Blog blog = new Blog(blogRequestDto);
-            blogRepository.save(blog);
-            return new BlogResponseDto(blog);
-
-        } else {
-            return null;
         }
+
+        // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+        );
+
+        Blog blog = new Blog(blogRequestDto, user);
+        blogRepository.save(blog);
+        return new BlogResponseDto(blog);
+        
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<BlogResponseDto> getContents() {
         List<Blog> blogList = blogRepository.findAllByOrderByModifiedAtDesc();
         List<BlogResponseDto> blogResponseDto = new ArrayList<>();
@@ -63,7 +62,7 @@ public class BlogService {
         return blogResponseDto;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public BlogResponseDto getContent(Long id) {
         Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물입니다.")
@@ -71,15 +70,14 @@ public class BlogService {
         return new BlogResponseDto(blog);
     }
 
-    @Transactional(readOnly = true)
-    public List<BlogResponseDto> getByUsername(String username) {
-        List<Blog> blogList = blogRepository.getPostingByUsername(username);
-        List<BlogResponseDto> responseDtoList = blogList.stream().map(posting -> new BlogResponseDto(posting)).collect(Collectors.toList());
-        return responseDtoList;
-    }
 
     @Transactional
-    public String updateContent(Long id, BlogRequestDto requestDto, HttpServletRequest request) {
+    public BlogResponseDto updateContent(Long id, BlogRequestDto requestDto, HttpServletRequest request) {
+
+        Blog blog = blogRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 글입니다.")
+        );
+
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
@@ -93,24 +91,20 @@ public class BlogService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
             );
-
-            Blog blog = blogRepository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 글입니다.")
+            blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.")
             );
-
-            if (!user.getUsername().equals(blog.getUsername())) {
-                throw new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.");
-            }
-
             blog.update(requestDto);
-            return "수정 완료";
-        } else {
-            return null;
         }
+        return new BlogResponseDto(blog);
     }
 
     @Transactional
-    public String deletePost(Long id, HttpServletRequest request) {
+    public DeleteResponseDto deletePost(Long id, HttpServletRequest request) {
+        Blog blog = blogRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 글입니다.")
+        );
+
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
@@ -121,22 +115,17 @@ public class BlogService {
                 throw new IllegalArgumentException("Token Error");
             }
 
+
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
             );
 
-            Blog blog = blogRepository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 글입니다.")
+            blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                    () -> new IllegalArgumentException("본인의 게시글만 삭제할 수 있습니다.")
             );
-
-            if (!user.getUsername().equals(blog.getUsername())) {
-                throw new IllegalArgumentException("본인이 작성한 게시글만 삭제할 수 있습니다.");
-            }
-
             blogRepository.deleteById(id);
-            return "삭제 완료";
-        } else {
-            return null;
         }
+        return new DeleteResponseDto();
     }
 }
+

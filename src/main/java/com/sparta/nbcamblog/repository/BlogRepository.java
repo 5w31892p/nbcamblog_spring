@@ -4,10 +4,10 @@ import com.sparta.nbcamblog.entity.Blog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BlogRepository extends JpaRepository<Blog, Long> {
     List<Blog> findAllByOrderByModifiedAtDesc();
-
-    List<Blog> getPostingByUsername(String username);
+    Optional<Blog> findByIdAndUserId(Long id, Long userId);
     Blog getById(Long id);
 }

@@ -3,12 +3,14 @@ package com.sparta.nbcamblog.dto;
 import com.sparta.nbcamblog.entity.Blog;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Component
 @NoArgsConstructor
-public class BlogResponseDto {
+public class BlogResponseDto extends Blog {
     private Long id;
     private String username;
     private String title;

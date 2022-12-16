@@ -3,6 +3,7 @@ package com.sparta.nbcamblog.controller;
 
 import com.sparta.nbcamblog.dto.BlogRequestDto;
 import com.sparta.nbcamblog.dto.BlogResponseDto;
+import com.sparta.nbcamblog.dto.DeleteResponseDto;
 import com.sparta.nbcamblog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -31,18 +32,13 @@ public class BlogController {
         return blogService.getContent(id);
     }
 
-    @GetMapping("/post/name")
-    public List<BlogResponseDto> getByUsername(@RequestParam String username) {
-        return blogService.getByUsername(username);
-    }
-
     @PutMapping("/post/{id}")
-    public String updateContent (@PathVariable Long id, @RequestBody BlogRequestDto blogRequestDto, HttpServletRequest request) {
+    public BlogResponseDto updateContent (@PathVariable Long id, @RequestBody BlogRequestDto blogRequestDto, HttpServletRequest request) {
         return blogService.updateContent(id, blogRequestDto, request);
     }
 
     @DeleteMapping("/post/{id}")
-    public String deletePost (@PathVariable Long id, @RequestBody HttpServletRequest request) {
+    public DeleteResponseDto deletePost (@PathVariable Long id, @RequestBody HttpServletRequest request) {
         return blogService.deletePost(id, request);
     }
 }
