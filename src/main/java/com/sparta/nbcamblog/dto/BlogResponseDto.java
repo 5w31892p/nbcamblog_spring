@@ -1,16 +1,16 @@
 package com.sparta.nbcamblog.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.nbcamblog.entity.Blog;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Component
 @NoArgsConstructor
-public class BlogResponseDto extends Blog {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class BlogResponseDto {
     private Long id;
     private String username;
     private String title;

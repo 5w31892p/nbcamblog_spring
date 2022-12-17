@@ -28,8 +28,8 @@ public class BlogService {
     @Transactional
     public BlogResponseDto createContent(BlogRequestDto blogRequestDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
-        Claims claims = null;
-
+        Claims claims;
+        Blog blog = new Blog();
         if (token != null) {
             // Token 검증
             if (jwtUtil.validateToken(token)) {
@@ -38,17 +38,18 @@ public class BlogService {
             } else {
                 throw new IllegalArgumentException("Token Error");
             }
+
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+            blog = new Blog(blogRequestDto, user);
+            blogRepository.save(blog);
+            return new BlogResponseDto(blog);
+        } else {
+            return new BlogResponseDto(blog);
         }
-
-        // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-        User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-        );
-
-        Blog blog = new Blog(blogRequestDto, user);
-        blogRepository.save(blog);
-        return new BlogResponseDto(blog);
-        
     }
 
     @Transactional(readOnly = true)
@@ -101,9 +102,6 @@ public class BlogService {
 
     @Transactional
     public DeleteResponseDto deletePost(Long id, HttpServletRequest request) {
-        Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 글입니다.")
-        );
 
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -120,6 +118,9 @@ public class BlogService {
                     () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
             );
 
+            Blog blog = blogRepository.findById(id).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 글입니다.")
+            );
             blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new IllegalArgumentException("본인의 게시글만 삭제할 수 있습니다.")
             );
