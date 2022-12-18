@@ -3,18 +3,16 @@ package com.sparta.nbcamblog.entity;
 import com.sparta.nbcamblog.dto.BlogRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 public class Blog extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
@@ -31,7 +29,7 @@ public class Blog extends Timestamped {
     private User user;
 
     public Blog (BlogRequestDto blogRequestDto, User user) {
-        this.username = blogRequestDto.getUsername();
+        this.username = user.getUsername();
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();
         this.user = user;

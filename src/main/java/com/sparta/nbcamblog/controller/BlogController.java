@@ -38,7 +38,7 @@ public class BlogController {
     }
 
     @DeleteMapping("/post/{id}")
-    public DeleteResponseDto deletePost (@PathVariable Long id, @RequestBody HttpServletRequest request) {
+    public DeleteResponseDto deletePost (@PathVariable Long id,  HttpServletRequest request) {
         return blogService.deletePost(id, request);
     }
 }

@@ -90,7 +90,7 @@ public class BlogService {
             }
 
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
             blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.")
@@ -102,6 +102,9 @@ public class BlogService {
 
     @Transactional
     public DeleteResponseDto deletePost(Long id, HttpServletRequest request) {
+        Blog blog = blogRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("게시글이 존재하지 않습니다.")
+        );
 
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -116,10 +119,6 @@ public class BlogService {
 
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
-            );
-
-            Blog blog = blogRepository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 글입니다.")
             );
             blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new IllegalArgumentException("본인의 게시글만 삭제할 수 있습니다.")
