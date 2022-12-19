@@ -70,7 +70,6 @@ public class BlogService {
 
             // 사용자 권한 가져와서 ADMIN 이면 전체 조회, USER 면 본인이 추가한 부분 조회
             UserRoleEnum userRoleEnum = user.getRole();
-            System.out.println("role = " + userRoleEnum);
 
             List<Blog> blogList;
             if (userRoleEnum == UserRoleEnum.USER) {
@@ -102,7 +101,7 @@ public class BlogService {
     public BlogResponseDto updateContent(Long id, BlogRequestDto requestDto, HttpServletRequest request) {
 
         Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 글입니다.")
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
         String token = jwtUtil.resolveToken(request);
@@ -118,6 +117,7 @@ public class BlogService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
+
             blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.")
             );
@@ -129,11 +129,11 @@ public class BlogService {
     @Transactional
     public DeleteResponseDto deletePost(Long id, HttpServletRequest request) {
         Blog blog = blogRepository.findById(id).orElseThrow(
-                () -> new NullPointerException("게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
-
         String token = jwtUtil.resolveToken(request);
         Claims claims;
+
 
         if (token != null) {
             if (jwtUtil.validateToken(token)) {
@@ -142,9 +142,8 @@ public class BlogService {
                 throw new IllegalArgumentException("Token Error");
             }
 
-
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
             blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new IllegalArgumentException("본인의 게시글만 삭제할 수 있습니다.")

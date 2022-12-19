@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -28,6 +30,9 @@ public class Blog extends Timestamped {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
+    @OneToMany
+    private List<Comment> commentList = new ArrayList<>();
+
     public Blog (BlogRequestDto blogRequestDto, User user) {
         this.username = user.getUsername();
         this.title = blogRequestDto.getTitle();
@@ -38,5 +43,9 @@ public class Blog extends Timestamped {
     public void update (BlogRequestDto blogRequestDto) {
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();
+    }
+
+    public void createComment(Comment comment) {
+        this.commentList.add(comment);
     }
 }
