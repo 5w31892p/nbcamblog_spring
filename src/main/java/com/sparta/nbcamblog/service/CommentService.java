@@ -6,6 +6,7 @@ import com.sparta.nbcamblog.dto.DeleteResponseDto;
 import com.sparta.nbcamblog.entity.Blog;
 import com.sparta.nbcamblog.entity.Comment;
 import com.sparta.nbcamblog.entity.User;
+import com.sparta.nbcamblog.entity.UserRoleEnum;
 import com.sparta.nbcamblog.jwt.JwtUtil;
 import com.sparta.nbcamblog.repository.BlogRepository;
 import com.sparta.nbcamblog.repository.CommentRepository;
@@ -92,11 +93,15 @@ public class CommentService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
-            comment = commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
-                    () -> new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
-            );
-            comment.update(requestDto);
 
+            UserRoleEnum role = user.getRole();
+            if (role == UserRoleEnum.ADMIN || user.getId().equals(comment.getUser().getId())) {
+                comment.update(requestDto);
+            } else {
+                comment = commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                        () -> new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
+                );
+            }
         }
         return new CommentResponseDto(comment);
     }
@@ -122,11 +127,14 @@ public class CommentService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
-
-            comment = commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
-                    () -> new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
-            );
-                commentRepository.deleteById(id);
+            UserRoleEnum role = user.getRole();
+            if (role == UserRoleEnum.ADMIN || user.getId().equals(comment.getUser().getId())) {
+            commentRepository.deleteById(id);
+            } else {
+                comment = commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                        () -> new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
+                );
+            }
         }
         return new DeleteResponseDto();
     }
