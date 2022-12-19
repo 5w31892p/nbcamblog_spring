@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,14 +57,17 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public CommentResponseDto getComments(Long postId, Long id) {
+    public List<CommentResponseDto> getComments(Long postId) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
-        Comment comment = commentRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
-        );
-        return new CommentResponseDto(comment);
+        List<Comment> commentList = commentRepository.findAllByOrderByModifiedAtDesc();
+        List<CommentResponseDto> commentResponseDto = new ArrayList<>();
+        for (Comment comment : commentList) {
+            CommentResponseDto commentResponseDto1 = new CommentResponseDto(comment);
+            commentResponseDto.add(commentResponseDto1);
+        }
+        return commentResponseDto;
     }
 
 

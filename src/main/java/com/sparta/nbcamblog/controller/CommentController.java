@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +21,9 @@ public class CommentController {
         return commentService.createComment(postId, commentRequestDto, request);
     }
 
-    @GetMapping("post/{postId}/comment/{id}")
-    public CommentResponseDto getComments(@PathVariable Long id, @PathVariable Long postId) {
-        return commentService.getComments(postId, id);
+    @GetMapping("post/{postId}/comments")
+    public List<CommentResponseDto> getComments(@PathVariable Long postId) {
+        return commentService.getComments(postId);
     }
 
     @PutMapping("post/{postId}/comment/{id}")
