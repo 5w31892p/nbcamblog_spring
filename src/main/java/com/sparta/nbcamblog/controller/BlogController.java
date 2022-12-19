@@ -23,8 +23,8 @@ public class BlogController {
     }
 
     @GetMapping("/posts")
-    public List<BlogResponseDto> getContents(HttpServletRequest request) {
-        return blogService.getContents(request);
+    public List<BlogResponseDto> getContents() {
+        return blogService.getContents();
     }
 
     @GetMapping("/post/{id}")
