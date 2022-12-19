@@ -117,7 +117,6 @@ public class BlogService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
-
             blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.")
             );

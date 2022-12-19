@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/post")
+@RequestMapping("/api")
 public class CommentController {
     private final CommentService commentService;
 
@@ -21,17 +21,17 @@ public class CommentController {
     }
 
     @GetMapping("post/{postId}/comment/{id}")
-    public CommentResponseDto getComments(@PathVariable Long postId, Long id) {
+    public CommentResponseDto getComments(@PathVariable Long id, @PathVariable Long postId) {
         return commentService.getComments(postId, id);
     }
 
     @PutMapping("post/{postId}/comment/{id}")
-    public CommentResponseDto updateComment (@PathVariable Long postId, Long id, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
+    public CommentResponseDto updateComment (@PathVariable Long id, @PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest request) {
         return commentService.updateComment(postId, id, commentRequestDto, request);
     }
 
-    @DeleteMapping("post/{postId}/comment/")
-    public DeleteResponseDto deleteComment (@PathVariable Long postId, Long id, HttpServletRequest request) {
+    @DeleteMapping("post/{postId}/comment/{id}")
+    public DeleteResponseDto deleteComment (@PathVariable Long id, @PathVariable Long postId, HttpServletRequest request) {
         return commentService.deleteComment(postId, id, request);
     }
 }

@@ -12,14 +12,14 @@ import javax.persistence.*;
 public class Comment extends Timestamped{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String comment;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
     @ManyToOne

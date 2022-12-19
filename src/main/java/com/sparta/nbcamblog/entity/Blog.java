@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Blog extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -45,7 +45,4 @@ public class Blog extends Timestamped {
         this.content = blogRequestDto.getContent();
     }
 
-    public void createComment(Comment comment) {
-        this.commentList.add(comment);
-    }
 }

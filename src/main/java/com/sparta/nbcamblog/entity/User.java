@@ -28,6 +28,7 @@ public class User {
     @OneToMany
     private List<Blog> blogList = new ArrayList<>();
 
+
     public User (String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
