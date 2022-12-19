@@ -5,6 +5,7 @@ import com.sparta.nbcamblog.dto.BlogResponseDto;
 import com.sparta.nbcamblog.dto.DeleteResponseDto;
 import com.sparta.nbcamblog.entity.Blog;
 import com.sparta.nbcamblog.entity.User;
+import com.sparta.nbcamblog.entity.UserRoleEnum;
 import com.sparta.nbcamblog.jwt.JwtUtil;
 import com.sparta.nbcamblog.repository.BlogRepository;
 import com.sparta.nbcamblog.repository.UserRepository;
@@ -53,14 +54,39 @@ public class BlogService {
     }
 
     @Transactional(readOnly = true)
-    public List<BlogResponseDto> getContents() {
-        List<Blog> blogList = blogRepository.findAllByOrderByModifiedAtDesc();
-        List<BlogResponseDto> blogResponseDto = new ArrayList<>();
-        for (Blog blog : blogList) {
-            BlogResponseDto blogResponseDto1 = new BlogResponseDto(blog);
-            blogResponseDto.add(blogResponseDto1);
+    public List<BlogResponseDto> getContents(HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+            // 사용자 권한 가져와서 ADMIN 이면 전체 조회, USER 면 본인이 추가한 부분 조회
+            UserRoleEnum userRoleEnum = user.getRole();
+            System.out.println("role = " + userRoleEnum);
+
+            List<Blog> blogList;
+            if (userRoleEnum == UserRoleEnum.USER) {
+                // 사용자 권한이 USER일 경우
+                blogList = blogRepository.findAllByUserId(user.getId());
+            } else {
+                blogList = blogRepository.findAllByOrderByModifiedAtDesc();
+            }
+            List<BlogResponseDto> blogResponseDto = new ArrayList<>();
+            for (Blog blog : blogList) {
+                BlogResponseDto blogResponseDto1 = new BlogResponseDto(blog);
+                blogResponseDto.add(blogResponseDto1);
+            }
+            return blogResponseDto;
         }
-        return blogResponseDto;
+        return null;
     }
 
     @Transactional(readOnly = true)
