@@ -30,7 +30,7 @@ public class Blog extends Timestamped {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "blog")
     private List<Comment> commentList = new ArrayList<>();
 
     public Blog (BlogRequestDto blogRequestDto, User user) {

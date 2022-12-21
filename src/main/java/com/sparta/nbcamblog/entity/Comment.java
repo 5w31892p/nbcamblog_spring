@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Comment extends Timestamped{
+public class Comment extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,16 +23,17 @@ public class Comment extends Timestamped{
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "BLOG_ID", nullable = false)
     private Blog blog;
 
-    public Comment (CommentRequestDto requestDto, User user, Blog blog) {
-        this. user = user;
+    public Comment(CommentRequestDto requestDto, User user, Blog blog) {
+        this.user = user;
         this.blog = blog;
         this.comment = requestDto.getComment();
     }
 
 
-    public void update (CommentRequestDto requestDto) {
+    public void update(CommentRequestDto requestDto) {
         this.comment = requestDto.getComment();
     }
 }
