@@ -60,12 +60,11 @@ public class BlogService {
     @Transactional(readOnly = true)
     public List<BlogResponseDto> getContents() {
         List<Blog> blogList = blogRepository.findAllByOrderByModifiedAtDesc();
-        List<BlogResponseDto> blogResponseDto = new ArrayList<>();
+        List<BlogResponseDto> blogResponseDtoList = new ArrayList<>();
         for (Blog blog : blogList) {
-            BlogResponseDto blogResponseDto1 = new BlogResponseDto(blog);
-            blogResponseDto.add(blogResponseDto1);
+            blogResponseDtoList.add(new BlogResponseDto(blog));
         }
-        return blogResponseDto;
+        return blogResponseDtoList;
     }
 
     @Transactional(readOnly = true)
