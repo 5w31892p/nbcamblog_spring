@@ -20,13 +20,13 @@ public class UserController {
     @PostMapping("/signup")
     public StatusResponse signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
-        return new StatusResponse(StatusEnum.SIGNUP);
+        return new StatusResponse(StatusEnum.SIGNUP_OK);
     }
 
     @ResponseBody
     @PostMapping("/login")
     public StatusResponse login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         userService.login(loginRequestDto, response);
-        return new StatusResponse(StatusEnum.LOGIN);
+        return new StatusResponse(StatusEnum.LOGIN_OK);
     }
 }

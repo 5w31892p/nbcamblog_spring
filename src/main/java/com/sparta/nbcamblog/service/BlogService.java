@@ -145,7 +145,7 @@ public class BlogService {
                 );
             }
         }
-        return new StatusResponse(StatusEnum.DELETE);
+        return new StatusResponse(StatusEnum.DELETE_OK);
     }
 }
 
