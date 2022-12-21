@@ -69,12 +69,11 @@ public class CommentService {
 //                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         List<Comment> commentList = commentRepository.findAllByOrderByModifiedAtDesc();
-        List<CommentResponseDto> commentResponseDto = new ArrayList<>();
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : commentList) {
-            CommentResponseDto commentResponseDto1 = new CommentResponseDto(comment);
-            commentResponseDto.add(commentResponseDto1);
+            commentResponseDtoList.add(new CommentResponseDto(comment));
         }
-        return commentResponseDto;
+        return commentResponseDtoList;
     }
 
 
