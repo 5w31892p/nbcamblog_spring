@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class SignupResponseDto {
-    private String msg = "회원가입에 성공하였습니다.";
-    private int statuscode = 200;
+    private int statusCode = 200;
+    private String message = "회원가입에 성공하였습니다.";
 }
