@@ -7,6 +7,8 @@ import com.sparta.nbcamblog.entity.Blog;
 import com.sparta.nbcamblog.entity.Comment;
 import com.sparta.nbcamblog.entity.User;
 import com.sparta.nbcamblog.entity.UserRoleEnum;
+import com.sparta.nbcamblog.exception.CustomException;
+import com.sparta.nbcamblog.exception.ExceptionEnum;
 import com.sparta.nbcamblog.jwt.JwtUtil;
 import com.sparta.nbcamblog.repository.BlogRepository;
 import com.sparta.nbcamblog.repository.CommentRepository;
@@ -31,7 +33,8 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new CustomException(ExceptionEnum.NO_POST)
+//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -42,12 +45,14 @@ public class CommentService {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("Token Error");
+                throw new CustomException(ExceptionEnum.INVALID_TOKEN);
+//                throw new IllegalArgumentException("Token Error");
             }
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new CustomException(ExceptionEnum.UNINFORMED_USERNAME)
+//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
             Comment comment = new Comment(commentRequestDto, user, blog);
@@ -60,7 +65,8 @@ public class CommentService {
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getComments(Long postId) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new CustomException(ExceptionEnum.NO_POST)
+//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         List<Comment> commentList = commentRepository.findAllByOrderByModifiedAtDesc();
         List<CommentResponseDto> commentResponseDto = new ArrayList<>();
@@ -75,10 +81,12 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long postId, Long id, CommentRequestDto requestDto, HttpServletRequest request) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new CustomException(ExceptionEnum.NO_POST)
+//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         Comment comment = commentRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+                () -> new CustomException(ExceptionEnum.NO_COMMENT)
+//                        new IllegalArgumentException("댓글이 존재하지 않습니다.")
         );
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -87,11 +95,13 @@ public class CommentService {
             if (jwtUtil.validateToken(token)) {
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("Token Error");
+                throw new CustomException(ExceptionEnum.INVALID_TOKEN);
+//                throw new IllegalArgumentException("Token Error");
             }
 
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new CustomException(ExceptionEnum.UNINFORMED_USERNAME)
+//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
             UserRoleEnum role = user.getRole();
@@ -99,7 +109,8 @@ public class CommentService {
                 comment.update(requestDto);
             } else {
                 comment = commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
-                        () -> new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
+                        () -> new CustomException(ExceptionEnum.UNAUTHENTICATED_TOKEN)
+//                                new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
                 );
             }
         }
@@ -109,10 +120,12 @@ public class CommentService {
     @Transactional
     public DeleteResponseDto deleteComment(Long postId, Long id, HttpServletRequest request) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                () -> new CustomException(ExceptionEnum.NO_POST)
+//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         Comment comment = commentRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+                () -> new CustomException(ExceptionEnum.NO_COMMENT)
+//                        new IllegalArgumentException("댓글이 존재하지 않습니다.")
         );
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -121,18 +134,21 @@ public class CommentService {
             if (jwtUtil.validateToken(token)) {
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("Token Error");
+                throw new CustomException(ExceptionEnum.INVALID_TOKEN);
+//                throw new IllegalArgumentException("Token Error");
             }
 
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new CustomException(ExceptionEnum.UNINFORMED_USERNAME)
+//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
             UserRoleEnum role = user.getRole();
             if (role == UserRoleEnum.ADMIN || user.getId().equals(comment.getUser().getId())) {
             commentRepository.deleteById(id);
             } else {
                 comment = commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
-                        () -> new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
+                        () -> new CustomException(ExceptionEnum.UNAUTHENTICATED_TOKEN)
+//                                new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
                 );
             }
         }
