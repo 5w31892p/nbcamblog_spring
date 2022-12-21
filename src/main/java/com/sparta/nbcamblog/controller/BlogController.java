@@ -3,7 +3,7 @@ package com.sparta.nbcamblog.controller;
 
 import com.sparta.nbcamblog.dto.BlogRequestDto;
 import com.sparta.nbcamblog.dto.BlogResponseDto;
-import com.sparta.nbcamblog.dto.DeleteResponseDto;
+import com.sparta.nbcamblog.exception.StatusResponse;
 import com.sparta.nbcamblog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +38,7 @@ public class BlogController {
     }
 
     @DeleteMapping("/post/{id}")
-    public DeleteResponseDto deletePost (@PathVariable Long id,  HttpServletRequest request) {
+    public StatusResponse deletePost (@PathVariable Long id, HttpServletRequest request) {
         return blogService.deletePost(id, request);
     }
 }
