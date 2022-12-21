@@ -29,23 +29,9 @@ public class BlogService {
 
     @Transactional
     public BlogResponseDto createContent(BlogRequestDto blogRequestDto, String username) {
-//        String token = jwtUtil.resolveToken(request);
-//        Claims claims;
-//        Blog blog = new Blog();
-//        if (token != null) {
-//            // Token 검증
-//            if (jwtUtil.validateToken(token)) {
-//                // 토큰에서 사용자 정보 가져오기
-//                claims = jwtUtil.getUserInfoFromToken(token);
-//            } else {
-//                throw new CustomStatus(StatusEnum.INVALID_TOKEN);
-////                throw new IllegalArgumentException("Token Error");
-//            }
-
         // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
         );
         Blog blog = new Blog(blogRequestDto, user);
         blogRepository.save(blog);
@@ -63,77 +49,48 @@ public class BlogService {
     }
 
     @Transactional(readOnly = true)
-    public BlogResponseDto getContent(Long id) {
-        Blog blog = blogRepository.findById(id).orElseThrow(
+    public BlogResponseDto getContent(Long postId) {
+        Blog blog = blogRepository.findById(postId).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
-//                        new IllegalArgumentException("존재하지 않는 게시물입니다.")
         );
         return new BlogResponseDto(blog);
     }
 
 
     @Transactional
-    public BlogResponseDto updateContent(Long id, BlogRequestDto requestDto, String username) {
+    public BlogResponseDto updateContent(Long postId, BlogRequestDto requestDto, String username) {
 
-        Blog blog = blogRepository.findById(id).orElseThrow(
+        Blog blog = blogRepository.findById(postId).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
-//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
-//        String token = jwtUtil.resolveToken(request);
-//        Claims claims;
-//
-//        if (token != null) {
-//            if (jwtUtil.validateToken(token)) {
-//                claims = jwtUtil.getUserInfoFromToken(token);
-//            } else {
-//                throw new CustomStatus(StatusEnum.INVALID_TOKEN);
-////                throw new IllegalArgumentException("Token Error");
-//            }
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
         );
         UserRoleEnum role = user.getRole();
         if (role == UserRoleEnum.ADMIN || user.getId().equals(blog.getUser().getId())) {
             blog.update(requestDto);
         } else {
-            blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+            blog = blogRepository.findByIdAndUserId(postId, user.getId()).orElseThrow(
                     () -> new CustomStatus(StatusEnum.UNAUTHENTICATED_TOKEN)
-//                                new IllegalArgumentException("본인이 작성한 게시글만 수정할 수 있습니다.")
             );
         }
         return new BlogResponseDto(blog);
     }
 
     @Transactional
-    public StatusResponse deletePost(Long id, String username) {
-        Blog blog = blogRepository.findById(id).orElseThrow(
+    public StatusResponse deletePost(Long postId, String username) {
+        Blog blog = blogRepository.findById(postId).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
-//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
-//        String token = jwtUtil.resolveToken(request);
-//        Claims claims;
-//
-//
-//        if (token != null) {
-//            if (jwtUtil.validateToken(token)) {
-//                claims = jwtUtil.getUserInfoFromToken(token);
-//            } else {
-//                throw new CustomStatus(StatusEnum.INVALID_TOKEN);
-////                throw new IllegalArgumentException("Token Error");
-//            }
-
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
         );
         UserRoleEnum role = user.getRole();
         if (role == UserRoleEnum.ADMIN || user.getId().equals(blog.getUser().getId())) {
-            blogRepository.deleteById(id);
+            blogRepository.deleteById(postId);
         } else {
-            blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+            blog = blogRepository.findByIdAndUserId(postId, user.getId()).orElseThrow(
                     () -> new CustomStatus(StatusEnum.UNAUTHENTICATED_TOKEN)
-//                                new IllegalArgumentException("본인이 작성한 게시글만 삭제할 수 있습니다.")
             );
         }
         return new StatusResponse(StatusEnum.DELETE_OK);

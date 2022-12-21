@@ -25,7 +25,6 @@ public class JwtService {
                 return new AuthenticatedUser(role, username);
             } else {
                 throw new CustomStatus(StatusEnum.INVALID_TOKEN);
-//                throw new IllegalArgumentException("Token Error");
             }
         }
     }

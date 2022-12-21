@@ -9,7 +9,6 @@ import com.sparta.nbcamblog.entity.UserRoleEnum;
 import com.sparta.nbcamblog.exception.CustomStatus;
 import com.sparta.nbcamblog.exception.StatusEnum;
 import com.sparta.nbcamblog.exception.StatusResponse;
-import com.sparta.nbcamblog.jwt.JwtUtil;
 import com.sparta.nbcamblog.repository.BlogRepository;
 import com.sparta.nbcamblog.repository.CommentRepository;
 import com.sparta.nbcamblog.repository.UserRepository;
@@ -26,18 +25,15 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final BlogRepository blogRepository;
-    private final JwtUtil jwtUtil;
 
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, String username) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
-//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
         );
 
         Comment comment = new Comment(commentRequestDto, user, blog);
@@ -49,7 +45,6 @@ public class CommentService {
     public List<CommentResponseDto> getComments(Long postId) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
-//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         List<Comment> commentList = commentRepository.findAllByOrderByModifiedAtDesc();
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
@@ -64,15 +59,12 @@ public class CommentService {
     public CommentResponseDto updateComment(Long postId, Long id, CommentRequestDto requestDto, String username) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
-//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_COMMENT)
-//                        new IllegalArgumentException("댓글이 존재하지 않습니다.")
         );
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
         );
 
         UserRoleEnum role = user.getRole();
@@ -81,7 +73,6 @@ public class CommentService {
         } else {
             comment = commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new CustomStatus(StatusEnum.UNAUTHENTICATED_TOKEN)
-//                                new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
             );
         }
         return new CommentResponseDto(comment);
@@ -91,16 +82,13 @@ public class CommentService {
     public StatusResponse deleteComment(Long postId, Long id, String username) {
         Blog blog = blogRepository.findById(postId).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
-//                        new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_COMMENT)
-//                        new IllegalArgumentException("댓글이 존재하지 않습니다.")
         );
 
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-//                            new IllegalArgumentException("사용자가 존재하지 않습니다.")
         );
         UserRoleEnum role = user.getRole();
         if (role == UserRoleEnum.ADMIN || user.getId().equals(comment.getUser().getId())) {
@@ -108,7 +96,6 @@ public class CommentService {
         } else {
             comment = commentRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new CustomStatus(StatusEnum.UNAUTHENTICATED_TOKEN)
-//                                new IllegalArgumentException("본인이 작성한 댓글만 수정할 수 있습니다.")
             );
         }
         return new StatusResponse(StatusEnum.DELETE_OK);

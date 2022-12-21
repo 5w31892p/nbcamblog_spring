@@ -32,7 +32,6 @@ public class UserService {
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
             throw new CustomStatus(StatusEnum.DUPLICATE_USERNAME);
-//            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
 
         // 사용자 ROLE 확인
@@ -40,7 +39,6 @@ public class UserService {
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
                 throw new CustomStatus(StatusEnum.UNAUTHORIZED_ADMIN);
-//                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
             }
             role = UserRoleEnum.ADMIN;
         }
@@ -57,12 +55,10 @@ public class UserService {
         // 사용자 확인
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-//                        new IllegalArgumentException("등록된 사용자가 없습니다.")
         );
         // 비밀번호 확인
         if(!user.getPassword().equals(password)){
             throw new CustomStatus(StatusEnum.UNINFORMED_PASSWORD);
-//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
     }
