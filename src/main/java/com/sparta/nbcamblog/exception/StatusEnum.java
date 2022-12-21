@@ -6,11 +6,15 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum ExceptionEnum {
-
-    RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, 400),
-    ACCESS_DENIED_EXCEPTION(HttpStatus.UNAUTHORIZED, 401),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500),
+public enum StatusEnum {
+    // Success
+    SIGNUP(HttpStatus.OK, 200, "회원가입에 성공하였습니다."),
+    LOGIN(HttpStatus.OK, 200, "로그인이 완료되었습니다."),
+    DELETE(HttpStatus.OK, 200, "삭제가 완료되었습니다."),
+    // exception
+    RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, 400, "BAD_REQUEST"),
+    ACCESS_DENIED_EXCEPTION(HttpStatus.UNAUTHORIZED, 401, "UNAUTHORIZED"),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "INTERNAL_SERVER_ERROR"),
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, 400, "토큰이 유효하지 않습니다."),
     UNAUTHENTICATED_TOKEN(HttpStatus.BAD_REQUEST, 400, "작성자 또는 관리자만 삭제 및 수정할 수 있습니다."),
     DUPLICATE_USERNAME(HttpStatus.BAD_REQUEST, 400, "중복된 사용자가 존재합니다."),
@@ -23,11 +27,12 @@ public enum ExceptionEnum {
     private final int statusCode;
     private String message;
 
-    ExceptionEnum(HttpStatus status, int statusCode) {
+    StatusEnum(HttpStatus status, int statusCode) {
         this.status = status;
         this.statusCode = statusCode;
     }
-    ExceptionEnum(HttpStatus status, int statusCode, String message) {
+
+    StatusEnum(HttpStatus status, int statusCode, String message) {
         this.status = status;
         this.statusCode = statusCode;
         this.message = message;
