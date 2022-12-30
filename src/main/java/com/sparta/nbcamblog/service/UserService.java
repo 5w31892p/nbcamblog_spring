@@ -30,13 +30,9 @@ public class UserService {
 
     @Transactional
     public void signup(SignupRequestDto requestDto) {
-        // BlogUser user = new BlogUser();
-        // user.getUsername().equals(signupRequestDto.getUsername());
-        // user.getPassword().equals(passwordEncoder.encode(signupRequestDto.getPassword()));
-        // user.getRole().equals(signupRequestDto.isAdmin());
-        // this.userRepository.save(user);
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
+
         Optional<BlogUser> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
             throw new CustomStatus(StatusEnum.DUPLICATE_USERNAME);
