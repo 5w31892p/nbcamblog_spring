@@ -1,8 +1,10 @@
 package com.sparta.nbcamblog.exception;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.Getter;
 
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
@@ -21,8 +23,8 @@ public enum StatusEnum {
     UNINFORMED_USERNAME(HttpStatus.BAD_REQUEST, 400, "등록되지 않은 사용자입니다."),
     UNINFORMED_PASSWORD(HttpStatus.BAD_REQUEST, 400, "비밀번호가 일치하지 않습니다."),
     UNAUTHORIZED_ADMIN(HttpStatus.UNAUTHORIZED, 401, "관리자 암호가 틀려 등록이 불가능합니다."),
-    NO_POST(HttpStatus.NOT_FOUND, 404, "게시글이 존재하지 않습니다."),
-    NO_COMMENT(HttpStatus.NOT_FOUND, 404, "게시글이 존재하지 않습니다.");
+    NO_POST(HttpStatus.NOT_FOUND, 404, "해당 게시글이 존재하지 않습니다."),
+    NO_COMMENT(HttpStatus.NOT_FOUND, 404, "해당 댓글이 존재하지 않습니다.");
     private final HttpStatus status;
     private final int statusCode;
     private String message;

@@ -1,40 +1,40 @@
 package com.sparta.nbcamblog.service;
 
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.sparta.nbcamblog.dto.LoginRequestDto;
 import com.sparta.nbcamblog.dto.SignupRequestDto;
-import com.sparta.nbcamblog.entity.User;
+import com.sparta.nbcamblog.entity.BlogUser;
 import com.sparta.nbcamblog.entity.UserRoleEnum;
 import com.sparta.nbcamblog.exception.CustomStatus;
 import com.sparta.nbcamblog.exception.StatusEnum;
 import com.sparta.nbcamblog.jwt.JwtUtil;
 import com.sparta.nbcamblog.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
 
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
-        String username = signupRequestDto.getUsername();
-        String password = signupRequestDto.getPassword();
-
-        // 회원 중복 확인
-        Optional<User> found = userRepository.findByUsername(username);
+        Optional<BlogUser> found = userRepository.findByUsername(signupRequestDto.getUsername());
         if (found.isPresent()) {
             throw new CustomStatus(StatusEnum.DUPLICATE_USERNAME);
         }
 
-        // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
@@ -42,22 +42,18 @@ public class UserService {
             }
             role = UserRoleEnum.ADMIN;
         }
-
-        User user = new User(username, password, role);
+        BlogUser user = new BlogUser(signupRequestDto.getUsername(), signupRequestDto.getPassword(), role);
         userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        String username = loginRequestDto.getUsername();
-        String password = loginRequestDto.getPassword();
-
         // 사용자 확인
-        User user = userRepository.findByUsername(username).orElseThrow(
+        BlogUser user = userRepository.findByUsername(loginRequestDto.getUsername()).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
         // 비밀번호 확인
-        if(!user.getPassword().equals(password)){
+        if(!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new CustomStatus(StatusEnum.UNINFORMED_PASSWORD);
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));

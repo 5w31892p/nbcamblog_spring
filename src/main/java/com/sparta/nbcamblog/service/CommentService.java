@@ -1,10 +1,16 @@
 package com.sparta.nbcamblog.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.sparta.nbcamblog.dto.CommentRequestDto;
 import com.sparta.nbcamblog.dto.CommentResponseDto;
 import com.sparta.nbcamblog.entity.Blog;
+import com.sparta.nbcamblog.entity.BlogUser;
 import com.sparta.nbcamblog.entity.Comment;
-import com.sparta.nbcamblog.entity.User;
 import com.sparta.nbcamblog.entity.UserRoleEnum;
 import com.sparta.nbcamblog.exception.CustomStatus;
 import com.sparta.nbcamblog.exception.StatusEnum;
@@ -12,12 +18,8 @@ import com.sparta.nbcamblog.exception.StatusResponse;
 import com.sparta.nbcamblog.repository.BlogRepository;
 import com.sparta.nbcamblog.repository.CommentRepository;
 import com.sparta.nbcamblog.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class CommentService {
                 () -> new CustomStatus(StatusEnum.NO_POST)
         );
         // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-        User user = userRepository.findByUsername(username).orElseThrow(
+        BlogUser user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
 
@@ -63,7 +65,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_COMMENT)
         );
-        User user = userRepository.findByUsername(username).orElseThrow(
+        BlogUser user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
 
@@ -87,7 +89,7 @@ public class CommentService {
                 () -> new CustomStatus(StatusEnum.NO_COMMENT)
         );
 
-        User user = userRepository.findByUsername(username).orElseThrow(
+        BlogUser user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
         UserRoleEnum role = user.getRole();

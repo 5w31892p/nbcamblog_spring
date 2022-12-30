@@ -1,12 +1,21 @@
 package com.sparta.nbcamblog.entity;
 
-import com.sparta.nbcamblog.dto.BlogRequestDto;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.sparta.nbcamblog.dto.BlogRequestDto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
@@ -28,12 +37,12 @@ public class Blog extends Timestamped {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    private BlogUser user;
 
     @OneToMany(mappedBy = "blog")
     private List<Comment> commentList = new ArrayList<>();
 
-    public Blog (BlogRequestDto blogRequestDto, User user) {
+    public Blog (BlogRequestDto blogRequestDto, BlogUser user) {
         this.username = user.getUsername();
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();

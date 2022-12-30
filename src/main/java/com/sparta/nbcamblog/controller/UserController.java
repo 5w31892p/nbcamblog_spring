@@ -1,15 +1,21 @@
 package com.sparta.nbcamblog.controller;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sparta.nbcamblog.dto.LoginRequestDto;
 import com.sparta.nbcamblog.dto.SignupRequestDto;
 import com.sparta.nbcamblog.exception.StatusEnum;
 import com.sparta.nbcamblog.exception.StatusResponse;
 import com.sparta.nbcamblog.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor

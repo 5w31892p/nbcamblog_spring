@@ -1,6 +1,16 @@
 package com.sparta.nbcamblog.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRoleEnum {
-    USER, // 일반 사용자
-    ADMIN // 관리자
+    ADMIN("ROLE_ADMIN"),
+    USER("ROLE_USER");
+
+
+    UserRoleEnum(String value) {
+        this.value = value;
+    }
+
+    private String value;
 }

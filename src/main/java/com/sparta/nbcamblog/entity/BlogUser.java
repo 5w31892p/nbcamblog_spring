@@ -1,16 +1,24 @@
 package com.sparta.nbcamblog.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Getter
-@Entity(name = "users")
+@Entity
 @NoArgsConstructor
-public class User {
+public class BlogUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -29,7 +37,7 @@ public class User {
     private List<Blog> blogList = new ArrayList<>();
 
 
-    public User (String username, String password, UserRoleEnum role) {
+    public BlogUser (String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
         this.role = role;

@@ -1,9 +1,15 @@
 package com.sparta.nbcamblog.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.sparta.nbcamblog.dto.BlogRequestDto;
 import com.sparta.nbcamblog.dto.BlogResponseDto;
 import com.sparta.nbcamblog.entity.Blog;
-import com.sparta.nbcamblog.entity.User;
+import com.sparta.nbcamblog.entity.BlogUser;
 import com.sparta.nbcamblog.entity.UserRoleEnum;
 import com.sparta.nbcamblog.exception.CustomStatus;
 import com.sparta.nbcamblog.exception.StatusEnum;
@@ -11,12 +17,8 @@ import com.sparta.nbcamblog.exception.StatusResponse;
 import com.sparta.nbcamblog.jwt.JwtUtil;
 import com.sparta.nbcamblog.repository.BlogRepository;
 import com.sparta.nbcamblog.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class BlogService {
     @Transactional
     public BlogResponseDto createContent(BlogRequestDto blogRequestDto, String username) {
         // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-        User user = userRepository.findByUsername(username).orElseThrow(
+        BlogUser user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
         Blog blog = new Blog(blogRequestDto, user);
@@ -49,8 +51,8 @@ public class BlogService {
     }
 
     @Transactional(readOnly = true)
-    public BlogResponseDto getContent(Long postId) {
-        Blog blog = blogRepository.findById(postId).orElseThrow(
+    public BlogResponseDto getContent(Long id) {
+        Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
         );
         return new BlogResponseDto(blog);
@@ -58,19 +60,19 @@ public class BlogService {
 
 
     @Transactional
-    public BlogResponseDto updateContent(Long postId, BlogRequestDto requestDto, String username) {
+    public BlogResponseDto updateContent(Long id, BlogRequestDto requestDto, String username) {
 
-        Blog blog = blogRepository.findById(postId).orElseThrow(
+        Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
         );
-        User user = userRepository.findByUsername(username).orElseThrow(
+        BlogUser user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
         UserRoleEnum role = user.getRole();
         if (role == UserRoleEnum.ADMIN || user.getId().equals(blog.getUser().getId())) {
             blog.update(requestDto);
         } else {
-            blog = blogRepository.findByIdAndUserId(postId, user.getId()).orElseThrow(
+            blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new CustomStatus(StatusEnum.UNAUTHENTICATED_TOKEN)
             );
         }
@@ -78,18 +80,18 @@ public class BlogService {
     }
 
     @Transactional
-    public StatusResponse deletePost(Long postId, String username) {
-        Blog blog = blogRepository.findById(postId).orElseThrow(
+    public StatusResponse deletePost(Long id, String username) {
+        Blog blog = blogRepository.findById(id).orElseThrow(
                 () -> new CustomStatus(StatusEnum.NO_POST)
         );
-        User user = userRepository.findByUsername(username).orElseThrow(
+        BlogUser user = userRepository.findByUsername(username).orElseThrow(
                 () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
         UserRoleEnum role = user.getRole();
         if (role == UserRoleEnum.ADMIN || user.getId().equals(blog.getUser().getId())) {
-            blogRepository.deleteById(postId);
+            blogRepository.deleteById(id);
         } else {
-            blog = blogRepository.findByIdAndUserId(postId, user.getId()).orElseThrow(
+            blog = blogRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new CustomStatus(StatusEnum.UNAUTHENTICATED_TOKEN)
             );
         }

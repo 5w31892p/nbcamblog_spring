@@ -1,10 +1,17 @@
 package com.sparta.nbcamblog.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import com.sparta.nbcamblog.dto.CommentRequestDto;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Getter
 @Entity
@@ -20,13 +27,13 @@ public class Comment extends Timestamped {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    private BlogUser user;
 
     @ManyToOne
     @JoinColumn(name = "BLOG_ID", nullable = false)
     private Blog blog;
 
-    public Comment(CommentRequestDto requestDto, User user, Blog blog) {
+    public Comment(CommentRequestDto requestDto, BlogUser user, Blog blog) {
         this.user = user;
         this.blog = blog;
         this.comment = requestDto.getComment();
