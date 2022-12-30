@@ -16,22 +16,25 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.sparta.nbcamblog.jwt.JwtAuthFilter;
 import com.sparta.nbcamblog.jwt.JwtUtil;
-import com.sparta.nbcamblog.service.UserSecurityService;
+import com.sparta.nbcamblog.security.UserSecurityService;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
 @RequiredArgsConstructor
+
 public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserSecurityService userDetailsService;
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         //jwt토큰 사용
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil,userDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
         http.authorizeHttpRequests().requestMatchers(
             new AntPathRequestMatcher("/**")).permitAll()
             .and()
@@ -42,6 +45,7 @@ public class SecurityConfig {
                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)) // X-Frame-Options 헤더의 값으로 sameorigin을 설정
             .and()
             .formLogin().permitAll()
+            .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();

@@ -29,30 +29,37 @@ public class UserService {
 
 
     @Transactional
-    public void signup(SignupRequestDto signupRequestDto) {
-        Optional<BlogUser> found = userRepository.findByUsername(signupRequestDto.getUsername());
+    public void signup(SignupRequestDto requestDto) {
+        // BlogUser user = new BlogUser();
+        // user.getUsername().equals(signupRequestDto.getUsername());
+        // user.getPassword().equals(passwordEncoder.encode(signupRequestDto.getPassword()));
+        // user.getRole().equals(signupRequestDto.isAdmin());
+        // this.userRepository.save(user);
+        String username = requestDto.getUsername();
+        String password = requestDto.getPassword();
+        Optional<BlogUser> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
             throw new CustomStatus(StatusEnum.DUPLICATE_USERNAME);
         }
 
         UserRoleEnum role = UserRoleEnum.USER;
-        if (signupRequestDto.isAdmin()) {
-            if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
+        if (requestDto.isAdmin()) {
+            if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
                 throw new CustomStatus(StatusEnum.UNAUTHORIZED_ADMIN);
             }
             role = UserRoleEnum.ADMIN;
         }
-        BlogUser user = new BlogUser(signupRequestDto.getUsername(), signupRequestDto.getPassword(), role);
+
+        BlogUser user = new BlogUser(requestDto.getUsername(), passwordEncoder.encode(password), role);
         userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        // 사용자 확인
         BlogUser user = userRepository.findByUsername(loginRequestDto.getUsername()).orElseThrow(
-                () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
+            () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
-        // 비밀번호 확인
+
         if(!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new CustomStatus(StatusEnum.UNINFORMED_PASSWORD);
         }

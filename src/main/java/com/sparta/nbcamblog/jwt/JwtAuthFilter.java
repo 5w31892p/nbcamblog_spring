@@ -7,23 +7,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.sparta.nbcamblog.service.UserSecurityService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.nbcamblog.exception.CustomStatus;
+import com.sparta.nbcamblog.exception.StatusEnum;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 	public final JwtUtil jwtUtil;
-	private final UserSecurityService userDetailsService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -32,7 +32,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 		if (token!=null) {
 			if (!jwtUtil.validateToken(token)) {
-				jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED.value());
+				jwtExceptionHandler(response, StatusEnum.INVALID_TOKEN);
 				return;
 			}
 			Claims info = jwtUtil.getUserInfoFromToken(token);
@@ -41,20 +41,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	private void setAuthentication(String username) {
+	public void setAuthentication(String username) {
 		SecurityContext context = SecurityContextHolder.createEmptyContext();
-		Authentication authentication = createAuthentication(username);
+		Authentication authentication = jwtUtil.createAuthentication(username);
 		context.setAuthentication(authentication);
 
 		SecurityContextHolder.setContext(context);
-
 	}
-	public void jwtExceptionHandler(HttpServletResponse response, String msg, int statusCode) {
-
-	}
-
-	public Authentication createAuthentication(String username) {
-		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+	public void jwtExceptionHandler(HttpServletResponse response, StatusEnum statusEnum) {
+		// 토큰 오류시 클라이언트에게 Exception 처리 값을 알려주는 함수이다.
+		response.setStatus(statusEnum.getStatusCode());
+		response.setContentType("application/json");
+		try {
+			String json = new ObjectMapper().writeValueAsString(new CustomStatus(StatusEnum.INVALID_TOKEN));
+			response.getWriter().write(json);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
 	}
 }
