@@ -9,6 +9,7 @@ gradlew
 gradle
 build.gradle
 settings.gradle
+/ERD.jpg
 
 ### STS ###
 .apt_generated
