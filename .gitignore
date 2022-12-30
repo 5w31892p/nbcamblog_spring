@@ -1,5 +1,3 @@
-
-
 HELP.md
 .gradle
 build/
@@ -40,5 +38,3 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
