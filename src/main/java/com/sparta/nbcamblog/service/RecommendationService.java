@@ -1,4 +1,4 @@
 package com.sparta.nbcamblog.service;
 
-public class LikeService {
+public class RecommendationService {
 }

@@ -6,10 +6,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-public class Like {
+@NoArgsConstructor
+public class Recommendation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -17,7 +19,7 @@ public class Like {
 	private Long postId;
 	private Long CommentId;
 
-	public Like(BlogUser user, Blog post, Comment comment) {
+	public Recommendation(BlogUser user, Blog post, Comment comment) {
 		this.userId = user.getId();
 		this.postId = post.getId();
 		CommentId = comment.getId();
