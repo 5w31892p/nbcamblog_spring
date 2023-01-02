@@ -44,7 +44,7 @@ public class Blog extends Timestamped {
 
 
 	@ManyToMany
-	private List<BlogUser> voter;
+	private List<BlogUser> like = new ArrayList<>();
 
 	public Blog(BlogRequestDto blogRequestDto, BlogUser user) {
 		this.username = user.getUsername();

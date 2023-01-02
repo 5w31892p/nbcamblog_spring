@@ -22,7 +22,7 @@ public class BlogResponseDto {
     private String content;
     private LocalDateTime createdat;
     private LocalDateTime modifiedat;
-    private List<BlogUser> voter;
+    private int like;
     private List<CommentResponseDto> commentList;
 
     public BlogResponseDto(Blog blog) {
@@ -33,7 +33,7 @@ public class BlogResponseDto {
         this.content = blog.getContent();
         this.createdat = blog.getCreateAt();
         this.modifiedat = blog.getModifiedAt();
-        this.voter = blog.getVoter();
+        this.like = blog.getLike().size();
         for (Comment comment : blog.getCommentList()){
             list.add(new CommentResponseDto(comment));
         }

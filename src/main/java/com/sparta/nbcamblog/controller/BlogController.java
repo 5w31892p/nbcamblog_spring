@@ -61,16 +61,15 @@ public class BlogController {
 
 	@DeleteMapping("/post/{id}")
 	public StatusResponse deletePost(@PathVariable Long id, HttpServletRequest request) {
-		String token = jwtUtil.resolveToken(request);
-		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
+		String token = jwtUtil.resolveToken(request);AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
 		return blogService.deletePost(id, authenticatedUser.getUsername());
 	}
 
-	@GetMapping("/post/like/{id}")
-	public StatusResponse questionVote(@PathVariable Long id, HttpServletRequest request) {
+	@GetMapping("/like/{postId}")
+	public StatusResponse addLike(@PathVariable Long postId, HttpServletRequest request) {
 		String token = jwtUtil.resolveToken(request);
 		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
-		this.blogService.addLike(id, authenticatedUser.getUsername());
+		this.blogService.addLike(postId, authenticatedUser.getUsername());
 		return new StatusResponse(StatusEnum.Like_OK);
 	}
 }
