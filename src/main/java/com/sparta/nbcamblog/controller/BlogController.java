@@ -66,7 +66,7 @@ public class BlogController {
 		return blogService.deletePost(id, authenticatedUser.getUsername());
 	}
 
-	@GetMapping("/like/{postId}")
+	@GetMapping("/postlike/{postId}")
 	public StatusResponse addLike(@PathVariable Long postId, HttpServletRequest request) {
 		String token = jwtUtil.resolveToken(request);
 		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);

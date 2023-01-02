@@ -56,4 +56,11 @@ public class CommentController {
         AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
         return commentService.deleteComment(postId, id,authenticatedUser.getUsername());
     }
+
+    @GetMapping("commentlike/{commentId}")
+    public StatusResponse addLike(@PathVariable Long commentId, HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
+        return this.commentService.addLike(commentId, authenticatedUser.getUsername());
+    }
 }

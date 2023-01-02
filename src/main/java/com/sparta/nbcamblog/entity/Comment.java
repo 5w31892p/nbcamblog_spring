@@ -1,5 +1,7 @@
 package com.sparta.nbcamblog.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -37,7 +39,7 @@ public class Comment extends Timestamped {
     private Blog blog;
 
     @ManyToMany
-    Set<BlogUser> voter;
+    private List<BlogUser> like = new ArrayList<>();
 
 
     public Comment(CommentRequestDto requestDto, BlogUser user, Blog blog) {

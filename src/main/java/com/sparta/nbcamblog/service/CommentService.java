@@ -103,9 +103,26 @@ public class CommentService {
         return new StatusResponse(StatusEnum.DELETE_OK);
     }
 
-    public void voteComment(Comment comment, BlogUser user) {
-        comment.getVoter().add(user);
-        this.commentRepository.save(comment);
+    @Transactional
+    public StatusResponse addLike(Long commentId, String username) {
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+            () -> new CustomStatus(StatusEnum.NO_COMMENT)
+        );
+        BlogUser user = userRepository.findByUsername(username).orElseThrow(
+            () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
+        );
+        if (!comment.getLike().contains(user)) {
+            comment.getLike().add(user);
+            comment.getLike().size();
+            this.commentRepository.save(comment);
+            return new StatusResponse(StatusEnum.Like_OK);
+        } else {
+            comment.getLike().remove(user);
+            comment.getLike().size();
+            this.commentRepository.save(comment);
+            return new StatusResponse(StatusEnum.Like_Cancellation_OK);
+        }
     }
 }
 

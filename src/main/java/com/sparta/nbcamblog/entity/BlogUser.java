@@ -37,10 +37,6 @@ public class BlogUser {
     @OneToMany
     private List<Blog> blogList = new ArrayList<>();
 
-
-    @ManyToMany
-    private List<Blog> like = new ArrayList<>();
-
     public BlogUser (String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
