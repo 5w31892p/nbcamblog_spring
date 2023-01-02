@@ -1,10 +1,11 @@
 package com.sparta.nbcamblog.dto;
 
+import java.time.LocalDateTime;
+
 import com.sparta.nbcamblog.entity.Comment;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

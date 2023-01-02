@@ -1,12 +1,14 @@
 package com.sparta.nbcamblog.service;
 
+import org.springframework.stereotype.Service;
+
 import com.sparta.nbcamblog.dto.AuthenticatedUser;
 import com.sparta.nbcamblog.entity.UserRoleEnum;
 import com.sparta.nbcamblog.exception.CustomStatus;
 import com.sparta.nbcamblog.exception.StatusEnum;
 import com.sparta.nbcamblog.jwt.JwtUtil;
+
 import io.jsonwebtoken.Claims;
-import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {

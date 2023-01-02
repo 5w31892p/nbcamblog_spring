@@ -1,6 +1,7 @@
 package com.sparta.nbcamblog.dto;
 
 import com.sparta.nbcamblog.entity.UserRoleEnum;
+
 import lombok.Getter;
 
 @Getter

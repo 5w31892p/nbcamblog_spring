@@ -1,5 +1,18 @@
 package com.sparta.nbcamblog.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sparta.nbcamblog.dto.AuthenticatedUser;
 import com.sparta.nbcamblog.dto.CommentRequestDto;
 import com.sparta.nbcamblog.dto.CommentResponseDto;
@@ -7,11 +20,8 @@ import com.sparta.nbcamblog.exception.StatusResponse;
 import com.sparta.nbcamblog.jwt.JwtUtil;
 import com.sparta.nbcamblog.service.CommentService;
 import com.sparta.nbcamblog.service.JwtService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
