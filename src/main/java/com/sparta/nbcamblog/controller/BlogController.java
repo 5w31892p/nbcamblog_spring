@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sparta.nbcamblog.dto.AuthenticatedUser;
 import com.sparta.nbcamblog.dto.BlogRequestDto;
 import com.sparta.nbcamblog.dto.BlogResponseDto;
+import com.sparta.nbcamblog.entity.Blog;
 import com.sparta.nbcamblog.exception.StatusEnum;
 import com.sparta.nbcamblog.exception.StatusResponse;
 import com.sparta.nbcamblog.jwt.JwtUtil;
@@ -30,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BlogController {
 	private final BlogService blogService;
-	private final UserService userService;
 	private final JwtUtil jwtUtil;
 	private final JwtService jwtService;
 
@@ -61,7 +61,8 @@ public class BlogController {
 
 	@DeleteMapping("/post/{id}")
 	public StatusResponse deletePost(@PathVariable Long id, HttpServletRequest request) {
-		String token = jwtUtil.resolveToken(request);AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
+		String token = jwtUtil.resolveToken(request);
+		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
 		return blogService.deletePost(id, authenticatedUser.getUsername());
 	}
 
@@ -69,7 +70,6 @@ public class BlogController {
 	public StatusResponse addLike(@PathVariable Long postId, HttpServletRequest request) {
 		String token = jwtUtil.resolveToken(request);
 		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
-		this.blogService.addLike(postId, authenticatedUser.getUsername());
-		return new StatusResponse(StatusEnum.Like_OK);
+		return this.blogService.addLike(postId, authenticatedUser.getUsername());
 	}
 }

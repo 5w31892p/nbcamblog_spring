@@ -95,64 +95,27 @@ public class BlogService {
 		return new StatusResponse(StatusEnum.DELETE_OK);
 	}
 
-	public Blog getBlog(Long postId) {
-		Optional<Blog> question = this.blogRepository.findById(postId);
-		if (question.isPresent()) {
-			return question.get();
-		} else {
-			throw new CustomStatus(StatusEnum.NO_POST);
-		}
-	}
-
 	@Transactional
-	public void addLike(Long id, String username) {
-		Blog blog = blogRepository.findById(id).orElseThrow(
+	public StatusResponse addLike(Long postId, String username) {
+		Blog blog = blogRepository.findById(postId).orElseThrow(
 			() -> new CustomStatus(StatusEnum.NO_POST)
 		);
 		BlogUser user = userRepository.findByUsername(username).orElseThrow(
 			() -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
 		);
-		blog.getLike().add(user);
-		blog.getLike().size();
-		this.blogRepository.save(blog);
+		if (!blog.getLike().contains(user)) {
+			blog.getLike().add(user);
+			blog.getLike().size();
+			this.blogRepository.save(blog);
+			return new StatusResponse(StatusEnum.Like_OK);
+		} else {
+			blog.getLike().remove(user);
+			blog.getLike().size();
+			this.blogRepository.save(blog);
+			return new StatusResponse(StatusEnum.Like_Cancellation_OK);
+
+		}
 	}
-
-	// public void addLike(Long id, String username) {
-	// 	Blog blog = blogRepository.findById(id).orElseThrow(
-	// 		() -> new CustomStatus(StatusEnum.NO_POST)
-	// 	);
-	// 	BlogUser user = userRepository.findByUsername(blog.getUsername()).orElseThrow(
-	// 		() -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-	// 	);
-	// 	blog.getVoter().add(user);
-	// 	this.blogRepository.save(blog);
-	// }
-
-	////////////////////////////
-
-	// public boolean likeCheck(Long postId, AuthenticatedUser authenticatedUser) {
-	//
-	// 	Blog blog = blogRepository.findById(postId).orElseThrow(
-	// 		() -> new CustomStatus(StatusEnum.NO_POST)
-	// 	);
-	// 	BlogUser user = userRepository.findByUsername(blog.getUsername()).orElseThrow(
-	// 		() -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
-	// 	);
-	// 	Optional<Like> like = likeRepository.findByUserIdAndPostId(user.getId(), postId);
-	//
-	// 	if (like.isPresent()) {
-	// 		blog.setLike(blog.getLike() - 1);
-	// 		blogRepository.save(blog);
-	// 		likeRepository.deleteById(like.get().getId());
-	// 		return false;
-	// 	} else {
-	// 		Blog blog1 = blogRepository.findById(postId).get();
-	// 		blog1.setLike(blog1.getLike() + 1);
-	// 		blogRepository.save(blog1);
-	// 	}
-	// 	return true;
-	//
-	// }
-
 }
+
 

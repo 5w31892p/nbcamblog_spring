@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import lombok.Getter;
@@ -35,6 +36,10 @@ public class BlogUser {
 
     @OneToMany
     private List<Blog> blogList = new ArrayList<>();
+
+
+    @ManyToMany
+    private List<Blog> like = new ArrayList<>();
 
     public BlogUser (String username, String password, UserRoleEnum role) {
         this.username = username;

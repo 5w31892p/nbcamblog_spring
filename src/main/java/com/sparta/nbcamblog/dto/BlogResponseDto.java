@@ -26,7 +26,6 @@ public class BlogResponseDto {
     private List<CommentResponseDto> commentList;
 
     public BlogResponseDto(Blog blog) {
-        List<CommentResponseDto> list = new ArrayList<>();
         this.id = blog.getId();
         this.username = blog.getUsername();
         this.title = blog.getTitle();
@@ -34,11 +33,11 @@ public class BlogResponseDto {
         this.createdat = blog.getCreateAt();
         this.modifiedat = blog.getModifiedAt();
         this.like = blog.getLike().size();
+        List<CommentResponseDto> list = new ArrayList<>();
         for (Comment comment : blog.getCommentList()){
             list.add(new CommentResponseDto(comment));
         }
         this.commentList =list;
     }
-
 
 }
