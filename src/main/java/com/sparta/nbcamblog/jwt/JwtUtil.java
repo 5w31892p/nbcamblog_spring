@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.sparta.nbcamblog.entity.UserRoleEnum;
+import com.sparta.nbcamblog.exception.CustomStatus;
+import com.sparta.nbcamblog.exception.StatusEnum;
 import com.sparta.nbcamblog.security.UserSecurityService;
 
 import io.jsonwebtoken.Claims;
@@ -79,15 +81,18 @@ public class JwtUtil {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw new CustomStatus(StatusEnum.INVALID_TOKEN);
+            // log.info("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token, 만료된 JWT token 입니다.");
+            throw new CustomStatus(StatusEnum.EXPIRED_TOKEN);
+            // log.info("Expired JWT token, 만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw new CustomStatus(StatusEnum.NOT_SUPPORTED_TOKEN);
+            // log.info("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            throw new CustomStatus(StatusEnum.WRONG_TOKEN);
+            // log.info("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
         }
-        return false;
     }
 
     // 토큰에서 사용자 정보 가져오기

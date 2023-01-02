@@ -1,11 +1,14 @@
 package com.sparta.nbcamblog.entity;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.sparta.nbcamblog.dto.CommentRequestDto;
@@ -32,6 +35,10 @@ public class Comment extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "BLOG_ID", nullable = false)
     private Blog blog;
+
+    @ManyToMany
+    Set<BlogUser> voter;
+
 
     public Comment(CommentRequestDto requestDto, BlogUser user, Blog blog) {
         this.user = user;

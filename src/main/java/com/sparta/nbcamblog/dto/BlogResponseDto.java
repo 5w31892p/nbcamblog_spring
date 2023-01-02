@@ -1,14 +1,16 @@
 package com.sparta.nbcamblog.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sparta.nbcamblog.entity.Blog;
-import com.sparta.nbcamblog.entity.Comment;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sparta.nbcamblog.entity.Blog;
+import com.sparta.nbcamblog.entity.BlogUser;
+import com.sparta.nbcamblog.entity.Comment;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
@@ -20,6 +22,7 @@ public class BlogResponseDto {
     private String content;
     private LocalDateTime createdat;
     private LocalDateTime modifiedat;
+    private List<BlogUser> voter;
     private List<CommentResponseDto> commentList;
 
     public BlogResponseDto(Blog blog) {
@@ -30,9 +33,12 @@ public class BlogResponseDto {
         this.content = blog.getContent();
         this.createdat = blog.getCreateAt();
         this.modifiedat = blog.getModifiedAt();
+        this.voter = blog.getVoter();
         for (Comment comment : blog.getCommentList()){
             list.add(new CommentResponseDto(comment));
         }
         this.commentList =list;
     }
+
+
 }

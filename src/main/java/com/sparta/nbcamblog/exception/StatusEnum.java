@@ -12,12 +12,17 @@ public enum StatusEnum {
     // Success
     SIGNUP_OK(HttpStatus.OK, 200, "회원가입에 성공하였습니다."),
     LOGIN_OK(HttpStatus.OK, 200, "로그인이 완료되었습니다."),
+    Like_OK(HttpStatus.OK, 200, "좋아요가 완료 되었습니다."),
+    Like_Cancellation_OK(HttpStatus.OK, 200, "좋아요가 취소 되었습니다."),
     DELETE_OK(HttpStatus.OK, 200, "삭제가 완료되었습니다."),
     // exception
     RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, 400, "BAD_REQUEST"),
     ACCESS_DENIED_EXCEPTION(HttpStatus.UNAUTHORIZED, 401, "UNAUTHORIZED"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "INTERNAL_SERVER_ERROR"),
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, 400, "토큰이 유효하지 않습니다."),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 401, "만료된 JWT TOKEN 입니다."),
+    NOT_SUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, 401, "지원되지 않는 JWT TOKEN 입니다."),
+    WRONG_TOKEN(HttpStatus.UNAUTHORIZED, 401, "잘못된 JWT TOKEN 입니다."),
     UNAUTHENTICATED_TOKEN(HttpStatus.BAD_REQUEST, 400, "작성자 또는 관리자만 삭제 및 수정할 수 있습니다."),
     DUPLICATE_USERNAME(HttpStatus.BAD_REQUEST, 400, "중복된 사용자가 존재합니다."),
     UNINFORMED_USERNAME(HttpStatus.BAD_REQUEST, 400, "등록되지 않은 사용자입니다."),

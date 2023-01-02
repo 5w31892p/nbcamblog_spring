@@ -102,5 +102,10 @@ public class CommentService {
         }
         return new StatusResponse(StatusEnum.DELETE_OK);
     }
+
+    public void voteComment(Comment comment, BlogUser user) {
+        comment.getVoter().add(user);
+        this.commentRepository.save(comment);
+    }
 }
 
