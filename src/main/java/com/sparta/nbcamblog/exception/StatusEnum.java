@@ -19,6 +19,9 @@ public enum StatusEnum {
     RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, 400, "BAD_REQUEST"),
     ACCESS_DENIED_EXCEPTION(HttpStatus.UNAUTHORIZED, 401, "UNAUTHORIZED"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "INTERNAL_SERVER_ERROR"),
+
+    ID_TYPE(HttpStatus.BAD_REQUEST, 400, "username의 형식은 알파벳 소문자와 숫자를 포함한 4~10자 입니다."),
+    PASSWORD_TYPE(HttpStatus.BAD_REQUEST, 400, "password의 형식은 알파벳 대소문자와 숫자, 그리고 특수문자를 포함한 8~15자 입니다."),
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, 400, "토큰이 유효하지 않습니다."),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 401, "만료된 JWT TOKEN 입니다."),
     NOT_SUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, 401, "지원되지 않는 JWT TOKEN 입니다."),

@@ -61,14 +61,4 @@ public class UserService {
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
     }
-
-    @Transactional
-    public BlogUser getUser(String username) {
-        Optional<BlogUser> user = this.userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            throw new CustomStatus(StatusEnum.UNAUTHENTICATED_TOKEN);
-        }
-    }
 }

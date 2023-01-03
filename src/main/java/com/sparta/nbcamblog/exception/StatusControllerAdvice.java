@@ -5,6 +5,7 @@ import java.nio.file.AccessDeniedException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -52,5 +53,16 @@ public class StatusControllerAdvice {
                         .statusCode(StatusEnum.INTERNAL_SERVER_ERROR.getStatusCode())
                         .message(e.getMessage())
                         .build());
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<StatusResponse> exceptionHandler(HttpServletRequest request, final MethodArgumentNotValidException e) {
+        e.printStackTrace();
+        return ResponseEntity
+            .status(StatusEnum.INTERNAL_SERVER_ERROR.getStatus())
+            .body(StatusResponse.builder()
+                .statusCode(StatusEnum.INTERNAL_SERVER_ERROR.getStatusCode())
+                .message(e.getMessage())
+                .build());
     }
 }

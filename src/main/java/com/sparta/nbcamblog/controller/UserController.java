@@ -2,6 +2,8 @@ package com.sparta.nbcamblog.controller;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,18 +23,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
-    private final UserService userService;
+	private final UserService userService;
 
-    @PostMapping("/signup")
-    public StatusResponse signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
-        userService.signup(signupRequestDto);
-        return new StatusResponse(StatusEnum.SIGNUP_OK);
-    }
+	@PostMapping("/signup")
+	public StatusResponse signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+		if (!signupRequestDto.getUsername().matches("^.*(?=^.{4,10}$)(?=.*\\d)(?=.*[a-z]).*$")) {
+			return new StatusResponse(StatusEnum.ID_TYPE);
+		}
+		if (!signupRequestDto.getPassword().matches("^.*(?=^.{8,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$")) {
+			return new StatusResponse(StatusEnum.PASSWORD_TYPE);
+		}
+		userService.signup(signupRequestDto);
+		return new StatusResponse(StatusEnum.SIGNUP_OK);
+	}
 
-    @ResponseBody
-    @PostMapping("/login")
-    public StatusResponse login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto, response);
-        return new StatusResponse(StatusEnum.LOGIN_OK);
-    }
+	@ResponseBody
+	@PostMapping("/login")
+	public StatusResponse login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+		userService.login(loginRequestDto, response);
+		return new StatusResponse(StatusEnum.LOGIN_OK);
+	}
 }
