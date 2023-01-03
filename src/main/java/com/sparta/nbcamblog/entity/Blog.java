@@ -3,6 +3,7 @@ package com.sparta.nbcamblog.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,7 +40,7 @@ public class Blog extends Timestamped {
 	@JoinColumn(name = "USER_ID", nullable = false)
 	private BlogUser user;
 
-	@OneToMany(mappedBy = "blog")
+	@OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE) // 게시물 삭제 시 해당 코멘트 모두 삭제
 	private List<Comment> commentList = new ArrayList<>();
 
 

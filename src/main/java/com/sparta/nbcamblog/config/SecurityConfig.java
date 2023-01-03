@@ -38,6 +38,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests().requestMatchers(
             new AntPathRequestMatcher("/**")).permitAll()
             .and()
+            // h2콘솔 csrf 검증 안한다.
             // .csrf().ignoringAntMatchers("/h2-console/**")// h2콘솔 csrf 검증 안한다.
             // .and()
             .headers()
