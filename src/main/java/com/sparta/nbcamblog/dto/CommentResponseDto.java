@@ -1,8 +1,11 @@
 package com.sparta.nbcamblog.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.sparta.nbcamblog.entity.Comment;
+import com.sparta.nbcamblog.entity.NestedReply;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +20,7 @@ public class CommentResponseDto {
     private LocalDateTime createAt;
     private LocalDateTime modifiedat;
     private int like;
+    private List<NestedReplyResponseDto> replyList;
 
     public CommentResponseDto(Comment comment) {
         this.postId = comment.getBlog().getId();
@@ -26,5 +30,10 @@ public class CommentResponseDto {
         this.createAt = comment.getCreateAt();
         this.modifiedat = comment.getModifiedAt();
         this.like = comment.getLike().size();
+        List<NestedReplyResponseDto> list = new ArrayList<>();
+        for (NestedReply reply : comment.getReplyList()) {
+            list.add(new NestedReplyResponseDto(reply));
+        }
+        this.replyList = list;
     }
 }
