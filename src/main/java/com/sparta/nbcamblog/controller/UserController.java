@@ -2,13 +2,10 @@ package com.sparta.nbcamblog.controller;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.nbcamblog.dto.LoginRequestDto;
@@ -27,9 +24,11 @@ public class UserController {
 
 	@PostMapping("/signup")
 	public StatusResponse signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+		// Username 형식 확인
 		if (!signupRequestDto.getUsername().matches("^.*(?=^.{4,10}$)(?=.*\\d)(?=.*[a-z]).*$")) {
 			return new StatusResponse(StatusEnum.ID_TYPE);
 		}
+		// Password 형식 확인
 		if (!signupRequestDto.getPassword().matches("^.*(?=^.{8,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$")) {
 			return new StatusResponse(StatusEnum.PASSWORD_TYPE);
 		}
@@ -37,7 +36,6 @@ public class UserController {
 		return new StatusResponse(StatusEnum.SIGNUP_OK);
 	}
 
-	@ResponseBody
 	@PostMapping("/login")
 	public StatusResponse login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
 		userService.login(loginRequestDto, response);

@@ -55,7 +55,6 @@ public class UserService {
         BlogUser user = userRepository.findByUsername(loginRequestDto.getUsername()).orElseThrow(
             () -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
         );
-
         if(!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new CustomStatus(StatusEnum.UNINFORMED_PASSWORD);
         }
