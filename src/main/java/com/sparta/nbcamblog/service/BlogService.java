@@ -2,7 +2,6 @@ package com.sparta.nbcamblog.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,14 +102,14 @@ public class BlogService {
 		BlogUser user = userRepository.findByUsername(username).orElseThrow(
 			() -> new CustomStatus(StatusEnum.UNINFORMED_USERNAME)
 		);
-		if (!blog.getLike().contains(user)) {
-			blog.getLike().add(user);
-			blog.getLike().size();
+		if (!blog.getLikes().contains(user)) {
+			blog.getLikes().add(user);
+			blog.getLikes().size();
 			this.blogRepository.save(blog);
 			return new StatusResponse(StatusEnum.Like_OK);
 		} else {
-			blog.getLike().remove(user);
-			blog.getLike().size();
+			blog.getLikes().remove(user);
+			blog.getLikes().size();
 			this.blogRepository.save(blog);
 			return new StatusResponse(StatusEnum.Like_Cancellation_OK);
 

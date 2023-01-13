@@ -2,8 +2,8 @@ package com.sparta.nbcamblog.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,16 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sparta.nbcamblog.dto.AuthenticatedUser;
 import com.sparta.nbcamblog.dto.BlogRequestDto;
 import com.sparta.nbcamblog.dto.BlogResponseDto;
-import com.sparta.nbcamblog.entity.Blog;
-import com.sparta.nbcamblog.exception.StatusEnum;
 import com.sparta.nbcamblog.exception.StatusResponse;
-import com.sparta.nbcamblog.jwt.JwtUtil;
 import com.sparta.nbcamblog.service.BlogService;
-import com.sparta.nbcamblog.service.JwtService;
-import com.sparta.nbcamblog.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,14 +25,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BlogController {
 	private final BlogService blogService;
-	private final JwtUtil jwtUtil;
-	private final JwtService jwtService;
 
 	@PostMapping("/post")
-	public BlogResponseDto createContent(@RequestBody BlogRequestDto blogRequestDto, HttpServletRequest request) {
-		String token = jwtUtil.resolveToken(request);
-		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
-		return blogService.createContent(blogRequestDto, authenticatedUser.getUsername());
+	public BlogResponseDto createContent(@RequestBody BlogRequestDto blogRequestDto, @AuthenticationPrincipal UserDetails userDetails) {
+		return blogService.createContent(blogRequestDto, userDetails.getUsername());
 	}
 
 	@GetMapping("/posts")
@@ -52,24 +42,17 @@ public class BlogController {
 	}
 
 	@PutMapping("/post/{id}")
-	public BlogResponseDto updateContent(@PathVariable Long id, @RequestBody BlogRequestDto blogRequestDto,
-		HttpServletRequest request) {
-		String token = jwtUtil.resolveToken(request);
-		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
-		return blogService.updateContent(id, blogRequestDto, authenticatedUser.getUsername());
+	public BlogResponseDto updateContent(@PathVariable Long id, @RequestBody BlogRequestDto blogRequestDto, @AuthenticationPrincipal UserDetails userDetails) {
+		return blogService.updateContent(id, blogRequestDto, userDetails.getUsername());
 	}
 
 	@DeleteMapping("/post/{id}")
-	public StatusResponse deletePost(@PathVariable Long id, HttpServletRequest request) {
-		String token = jwtUtil.resolveToken(request);
-		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
-		return blogService.deletePost(id, authenticatedUser.getUsername());
+	public StatusResponse deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+		return blogService.deletePost(id, userDetails.getUsername());
 	}
 
 	@GetMapping("/postlike/{postId}")
-	public StatusResponse addLike(@PathVariable Long postId, HttpServletRequest request) {
-		String token = jwtUtil.resolveToken(request);
-		AuthenticatedUser authenticatedUser = jwtService.validateAndGetInfo(token);
-		return this.blogService.addLike(postId, authenticatedUser.getUsername());
+	public StatusResponse addLike(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+		return this.blogService.addLike(postId, userDetails.getUsername());
 	}
 }

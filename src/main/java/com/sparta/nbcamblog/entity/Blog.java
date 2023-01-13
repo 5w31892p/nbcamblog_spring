@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,15 +38,15 @@ public class Blog extends Timestamped {
 	private String content;
 
 	@ManyToOne
-	@JoinColumn(name = "USER_ID", nullable = false)
+	@JoinColumn(name = "USER_ID", referencedColumnName = "id")
 	private BlogUser user;
 
-	@OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE) // 게시물 삭제 시 해당 코멘트 모두 삭제
+	@OneToMany(mappedBy = "blog", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER) // 게시물 삭제 시 해당 코멘트 모두 삭제
 	private List<Comment> commentList = new ArrayList<>();
 
 
 	@ManyToMany
-	private List<BlogUser> like = new ArrayList<>();
+	private List<BlogUser> likes = new ArrayList<>();
 
 	public Blog(BlogRequestDto blogRequestDto, BlogUser user) {
 		this.username = user.getUsername();

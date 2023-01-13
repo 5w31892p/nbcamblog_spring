@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-public class BlogUser {
+public class BlogUser extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -34,7 +34,7 @@ public class BlogUser {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(cascade = CascadeType.REMOVE) // 삭제시 해당 블로그 모두 함께 삭제
+    @OneToMany(mappedBy = "user" ,cascade = CascadeType.REMOVE) // 삭제시 해당 블로그 모두 함께 삭제
     private List<Blog> blogList = new ArrayList<>();
 
     public BlogUser (String username, String password, UserRoleEnum role) {

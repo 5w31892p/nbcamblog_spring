@@ -44,9 +44,6 @@ public class SecurityConfig {
             .headers()
             .addHeaderWriter(new XFrameOptionsHeaderWriter(
                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)) // X-Frame-Options 헤더의 값으로 sameorigin을 설정
-            .and()
-            .formLogin().permitAll()
-            .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();

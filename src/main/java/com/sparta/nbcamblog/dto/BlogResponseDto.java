@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta.nbcamblog.entity.Blog;
-import com.sparta.nbcamblog.entity.BlogUser;
 import com.sparta.nbcamblog.entity.Comment;
 
 import lombok.Getter;
@@ -32,7 +31,7 @@ public class BlogResponseDto {
         this.content = blog.getContent();
         this.createdat = blog.getCreateAt();
         this.modifiedat = blog.getModifiedAt();
-        this.like = blog.getLike().size();
+        this.like = blog.getLikes().size();
         List<CommentResponseDto> list = new ArrayList<>();
         for (Comment comment : blog.getCommentList()){
             list.add(new CommentResponseDto(comment));
