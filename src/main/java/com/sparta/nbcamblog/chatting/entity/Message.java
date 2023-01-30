@@ -45,9 +45,9 @@ public class Message {
     @JoinColumn(name = "room_id")
     private ChatRooms room;
 
-    public Message(String sender, String receiver, String message,  ChatRooms room) {
-        this.sender = sender;
-        this.receiver = receiver;
+    public Message(String message,  ChatRooms room) {
+        this.sender = room.getUser().getUsername();
+        this.receiver = room.getUser().getUsername();
         this.message = message;
         this.blogId = room.getBlogId();
         this.sendDate = LocalDateTime.now();

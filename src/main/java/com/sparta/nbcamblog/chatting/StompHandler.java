@@ -1,4 +1,4 @@
-package com.sparta.nbcamblog.chatting;// package com.sparta.morningworkout.chatting;
+// package com.sparta.nbcamblog.chatting;
 //
 // import org.springframework.messaging.Message;
 // import org.springframework.messaging.MessageChannel;
@@ -8,7 +8,7 @@ package com.sparta.nbcamblog.chatting;// package com.sparta.morningworkout.chatt
 // import org.springframework.security.access.AccessDeniedException;
 // import org.springframework.stereotype.Component;
 //
-// import com.sparta.morningworkout.jwtUtil.JwtUtil;
+// import com.sparta.nbcamblog.jwt.JwtUtil;
 //
 // import lombok.RequiredArgsConstructor;
 //

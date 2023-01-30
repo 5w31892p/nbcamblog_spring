@@ -28,7 +28,7 @@ public class MessageService {
 		if (message.getBlogId() != rooms.getBlogId()) {
 			throw new IllegalArgumentException("해당 상품의 채팅방이 존재하지 않습니다.");
 		} else {
-			Message messages = new Message(message.getSender(), message.getReceiver(), message.getMessage(), rooms);
+			Message messages = new Message(message.getMessage(), rooms);
 			messageRepository.save(messages);
 
 		}

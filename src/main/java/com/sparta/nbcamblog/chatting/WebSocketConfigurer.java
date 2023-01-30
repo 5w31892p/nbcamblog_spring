@@ -6,11 +6,9 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration
 @EnableWebSocketMessageBroker // 메시지 처리 활성화
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 public class WebSocketConfigurer implements WebSocketMessageBrokerConfigurer {
 	// private final StompHandler stompHandler; // jwt 인증
 
@@ -27,9 +25,7 @@ public class WebSocketConfigurer implements WebSocketMessageBrokerConfigurer {
 	public void configureMessageBroker(MessageBrokerRegistry config) { // broker 설정 부분
 
 		config.enableSimpleBroker("/sub"); // 받을 때
-		// sub/channel/채널아이디
 		config.setApplicationDestinationPrefixes("/pub"); // send처리
-		// pub/hello
 	}
 
 	// @Override
