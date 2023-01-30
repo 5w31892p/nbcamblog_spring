@@ -19,18 +19,11 @@ public class MessageService {
 	/**
 	 * 채팅 생성
 	 */
-	public Message createChat(MessageDto message) {
+	public void createChat(MessageDto message) {
 
 		ChatRooms rooms = roomRepository.findById(message.getRoomId()).orElseThrow(
 			() -> new IllegalArgumentException("채팅방이 존재하지 않습니다.")
 		);
-
-		// Profile profile = profileRepository.findById().orElseThrow(
-		// 	() -> new IllegalArgumentException("보내는 사용자가 올바르지 않습니다.")
-		// );
-		// if (rooms.getSellerId() == profile.getId()) {
-		// 	messageRepository.save(profile.getNickname())
-		// }
 
 		if (message.getBlogId() != rooms.getBlogId()) {
 			throw new IllegalArgumentException("해당 상품의 채팅방이 존재하지 않습니다.");
@@ -38,7 +31,6 @@ public class MessageService {
 			Message messages = new Message(message.getSender(), message.getReceiver(), message.getMessage(), rooms);
 			messageRepository.save(messages);
 
-			return messages;
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.sparta.nbcamblog.chatting.dto;
 
+import com.sparta.nbcamblog.chatting.entity.Message;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,11 +18,11 @@ public class MessageDto {
 	private String receiver;
 	private String message;
 
-	// public MessageDto(Message message) {
-	// 	this.roomId = message.getRoom().getId();
-	// 	this.productId = message.getProductId();
-	// 	this.sender = message.getSender();
-	// 	this.message = message.getMessage();
-	// 	this.sendDate = message.getSendDate();
-	// }
+	public MessageDto(Message message) {
+		this.roomId = message.getRoom().getId();
+		this.blogId = message.getBlogId();
+		this.sender = message.getSender();
+		this.receiver = message.getReceiver();
+		this.message = message.getMessage();
+	}
 }

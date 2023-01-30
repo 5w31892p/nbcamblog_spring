@@ -22,7 +22,7 @@ public class MessageController {
 		//채팅 저장
 		messageService.createChat(message);
 
-		simpMessageSendingOperations.convertAndSend("/sub/receive/" + message.getReceiver() + message.getBlogId(), message);
+		simpMessageSendingOperations.convertAndSend("/sub/receive/" + message.getReceiver() + "/blog" + message.getBlogId(), message);
 		return message;
 		//구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야됨
 		// sendTo : 브라우저에서 요청
